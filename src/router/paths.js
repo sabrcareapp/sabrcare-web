@@ -5,13 +5,14 @@
  */
 export default [
   {
+    // Relative to /src/views
     path: '/login',
     name: 'Login',
     view: 'Login'
   },
   {
     path: '/dashboard',
-    // Relative to /src/views
+    name: 'Dashboard',
     view: 'Dashboard'
   },
   {
