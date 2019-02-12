@@ -8,7 +8,7 @@
       <v-flex
         md12
         sm12
-        lg4
+        lg3
       >
         <material-chart-card
           :data="dailySalesChart.data"
@@ -42,7 +42,7 @@
       <v-flex
         md12
         sm12
-        lg4
+        lg3
       >
         <material-chart-card
           :data="emailsSubscriptionChart.data"
@@ -68,7 +68,7 @@
       <v-flex
         md12
         sm12
-        lg4
+        lg3
       >
         <material-chart-card
           :data="dataCompletedTasksChart.data"
@@ -87,6 +87,40 @@
               mdi-clock-outline
             </v-icon>
             <span class="caption grey--text font-weight-light">campaign sent 26 minutes ago</span>
+          </template>
+        </material-chart-card>
+      </v-flex>
+      <v-flex
+        md12
+        sm12
+        lg3
+      >
+        <material-chart-card
+          :data="dailySalesChart.data"
+          :options="dailySalesChart.options"
+          color="info"
+          type="Line"
+        >
+          <h4 class="title font-weight-light">Daily Sales</h4>
+          <p class="category d-inline-flex font-weight-light">
+            <v-icon
+              color="green"
+              small
+            >
+              mdi-arrow-up
+            </v-icon>
+            <span class="green--text">55%</span>&nbsp;
+            increase in today's sales
+          </p>
+
+          <template slot="actions">
+            <v-icon
+              class="mr-2"
+              small
+            >
+              mdi-clock-outline
+            </v-icon>
+            <span class="caption grey--text font-weight-light">updated 4 minutes ago</span>
           </template>
         </material-chart-card>
       </v-flex>
@@ -113,14 +147,14 @@
       >
         <material-stats-card
           color="orange"
-          icon="mdi-content-copy"
-          title="Used Space"
-          value="49/50"
-          small-value="GB"
-          sub-icon="mdi-alert"
-          sub-icon-color="error"
-          sub-text="Get More Space..."
-          sub-text-color="text-primary"
+          icon="mdi-stethoscope"
+          title="Health Experts"
+          value="50"
+          small-value=""
+          sub-icon="mdi-update"
+          sub-icon-color=""
+          sub-text="Just Updated"
+          sub-text-color=""
         />
       </v-flex>
       <v-flex
@@ -132,7 +166,7 @@
         <material-stats-card
           color="red"
           icon="mdi-information-outline"
-          title="Fixed Issues"
+          title="Issues Remaining"
           value="75"
           sub-icon="mdi-tag"
           sub-text="Tracked from Github"
@@ -146,18 +180,18 @@
       >
         <material-stats-card
           color="info"
-          icon="mdi-twitter"
-          title="Followers"
-          value="+245"
+          icon="mdi-account-multiple"
+          title="Users"
+          value="245"
           sub-icon="mdi-update"
           sub-text="Just Updated"
         />
       </v-flex>
-      <v-flex
+      <!-- <v-flex
         md12
         lg6
-      >
-        <material-card
+      > -->
+        <!-- <material-card
           color="orange"
           title="Employee Stats"
           text="New employees on 15th September, 2016"
@@ -187,13 +221,13 @@
               <td class="text-xs-right">{{ item.city }}</td>
             </template>
           </v-data-table>
-        </material-card>
-      </v-flex>
-      <v-flex
+        </material-card> -->
+      <!-- </v-flex> -->
+      <!-- <v-flex
         md12
         lg6
-      >
-        <material-card
+      > -->
+        <!-- <material-card
           class="card-tabs"
           color="green">
           <v-flex
@@ -353,8 +387,8 @@
               </v-list>
             </v-tab-item>
           </v-tabs-items>
-        </material-card>
-      </v-flex>
+        </material-card> -->
+      <!-- </v-flex> -->
     </v-layout>
   </v-container>
 </template>
