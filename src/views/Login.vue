@@ -1,6 +1,6 @@
 <template>
   <v-container fluid fill-height>
-    <v-layout row wrap align-end class="login-1" >
+    <v-layout row wrap align-center >
       <v-flex xs12 sm6 offset-sm3>
         <v-card class="mx-auto">
           <v-img
@@ -8,14 +8,13 @@
             position="center"
             height="auto"
             width="auto"
-            class="mb-5"
+            class="mb-4"
           ></v-img>
-
-          <!-- <v-card-title  primary-title>
-            <div >
-              <h3 class="headline mb-0">Login</h3>
-            </div>
-          </v-card-title>-->
+          <div class="text-xs-center">
+            <!-- <v-card-title primary-title> -->
+              <h3 class="mb-0 green--text">Login</h3>
+            <!-- </v-card-title> -->
+          </div>
           <v-form class="text-xs-center" ref="form" v-model="valid">
             <!-- <v-text-field v-model="name" :counter="10" :rules="nameRules" label="Name" required></v-text-field> -->
             <!-- <v-flex xs12 sm6> -->

@@ -11,6 +11,11 @@ export default [
     view: 'Login'
   },
   {
+    path: '/modal',
+    name: 'Modal',
+    view: 'HealthExpertModal'
+  },
+  {
     path: '/dashboard',
     name: 'Admin dashboard',
     view: 'Dashboard'
