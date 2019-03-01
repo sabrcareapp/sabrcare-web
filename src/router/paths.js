@@ -16,6 +16,21 @@ export default [
     view: 'HealthExpertModal'
   },
   {
+    path: '/patientList',
+    name: 'Patient List',
+    view: 'PatientList'
+  },
+  {
+    path: '/patientStats',
+    name: 'Patient Stats',
+    view: 'PatientStats'
+  },
+  {
+    path: '/patientMedicine',
+    name: 'Patient Medicines',
+    view: 'PatientMedicine'
+  },
+  {
     path: '/dashboard',
     name: 'Admin dashboard',
     view: 'Dashboard'

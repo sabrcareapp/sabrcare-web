@@ -26,7 +26,7 @@
           label="Search..."
           hide-details
           color="purple"
-        />-->
+        /> -->
         <!-- <router-link
           v-ripple
           class="toolbar-items"
@@ -134,8 +134,15 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 #core-toolbar a {
   text-decoration: none;
 }
 </style>
+
+<style lang="scss" scoped>
+@import "../../styles/material-dashboard/mixins";
+@import "../../styles/material-dashboard/variables";
+@import "../../styles/material-dashboard/toolbar";
+</style>
+

@@ -12,7 +12,7 @@
       <a
         href="http://www.example.com/"
         target="_blank"
-      >Sabrcare</a>
+      >Remedley</a>
     </span>
   </v-footer>
 </template>

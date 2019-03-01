@@ -13,7 +13,7 @@
 export default {
   metaInfo() {
     return {
-      title: "Sabrcare Web Interface"
+      title: "Remedley Web Interface"
     };
   }
 };

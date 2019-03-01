@@ -1,18 +1,18 @@
 <template>
   <v-container fluid fill-height>
-    <v-layout row wrap align-center >
+    <v-layout row wrap align-center>
       <v-flex xs12 sm6 offset-sm3>
         <v-card class="mx-auto">
           <v-img
-            src="http://sabrcare.com/wp-content/uploads/2018/07/sabcare-logo-1.png"
+            src="./img/Remedley-Logo.svg"
+            :aspect-ratio="16/9"
+            contain
             position="center"
-            height="auto"
-            width="auto"
             class="mb-4"
           ></v-img>
           <div class="text-xs-center">
             <!-- <v-card-title primary-title> -->
-              <h3 class="mb-0 green--text">Login</h3>
+            <h3 class="mb-0 green--text">Login</h3>
             <!-- </v-card-title> -->
           </div>
           <v-form class="text-xs-center" ref="form" v-model="valid">
