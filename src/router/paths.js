@@ -11,24 +11,44 @@ export default [
     view: 'Login'
   },
   {
+    path: '/signup',
+    name: 'Sign Up',
+    view: 'SignUp'
+  },
+  {
     path: '/modal',
     name: 'Modal',
     view: 'HealthExpertModal'
   },
   {
-    path: '/patientList',
+    path: '/patient-list',
     name: 'Patient List',
     view: 'PatientList'
   },
   {
-    path: '/patientStats',
+    path: '/patient-stats/:id',
     name: 'Patient Stats',
     view: 'PatientStats'
   },
   {
-    path: '/patientMedicine',
+    path: '/patient-medicine/:id',
     name: 'Patient Medicines',
     view: 'PatientMedicine'
+  },
+  {
+    path: '/patient-record/:id',
+    name: 'Patient Records',
+    view: 'PatientRecord'
+  },
+  {
+    path: '/patient-symptom/:id',
+    name: 'Patient Symptoms',
+    view: 'PatientSymptom'
+  },
+  {
+    path: '/patient-timeline/:id',
+    name: 'Patient Timeline',
+    view: 'PatientTimeline'
   },
   {
     path: '/dashboard',
@@ -65,5 +85,10 @@ export default [
     path: '/upgrade',
     name: 'Upgrade to PRO',
     view: 'Upgrade'
+  },
+  {
+    path: '/temp',
+    name: 'Temp',
+    view: 'Temp'
   }
 ]
