@@ -1,11 +1,12 @@
 <template>
   <v-container fluid fill-height>
-    <v-layout row wrap align-center>
-      <v-flex xs12 sm6 offset-sm3>
-        <v-card class="mx-auto">
+    <!-- <v-layout row wrap align-center> -->
+    <v-layout align-center justify-center>
+      <v-flex xs12 sm8 md6 lg6 xl6>
+        <v-card class="elevation-12">
           <v-img
             src="./img/Remedley-Logo.svg"
-            :aspect-ratio="16/9"
+            :aspect-ratio="20/9"
             contain
             position="center"
             class="mb-4"
@@ -50,11 +51,10 @@
             <v-btn type="submit" :disabled="!valid" color="success" @click.prevent="login">Login</v-btn>
             <!-- </router-link> -->
           </v-form>
-
-          <v-card-actions class="mx-5">
-            <v-btn flat color="success">Share</v-btn>
-            <v-btn flat color="success">Explore</v-btn>
-          </v-card-actions>
+          <v-card-text class="mx-5 black--text justify-center">
+            <h4 class="subheading font-weight-medium">Not a health expert yet ?</h4>
+            <v-btn class="subheading" round small color="success" @click="goToSignUp">Sign up</v-btn>
+          </v-card-text>
         </v-card>
       </v-flex>
     </v-layout>
@@ -69,7 +69,7 @@ export default {
     email: "",
     emailRules: [
       v => !!v || "E-mail is required",
-      v => /.+@.+/.test(v) || "E-mail must be valid"
+      v => /.+@.+\..+/.test(v) || "E-mail must be valid"
     ],
     password: "",
     passwordRules: [
@@ -80,8 +80,12 @@ export default {
   }),
 
   methods: {
+    goToSignUp() {
+      this.$router.push("/signup");
+    },
     login() {
-      this.$router.replace("/dashboard");
+      // this.$router.replace("/dashboard");
+      this.$router.replace("/patient-list");
     }
   }
 };
