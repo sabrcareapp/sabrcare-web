@@ -1,63 +1,62 @@
 <template>
-  <v-dialog v-model="dialog" :fullscreen="isFullscreen ? true:false">
+  <v-dialog
+    v-model="dialog"
+    :fullscreen="isFullscreen ? true:false"
+    transition="dialog-bottom-transition"
+  >
     <!-- <v-btn slot="activator" color="secondary" dark>Open Dialog</v-btn> -->
     <v-card>
-      <v-toolbar dark color="secondary">
+      <v-toolbar dark :color="color">
         <v-btn icon dark @click="dialog = false">
           <v-icon>mdi-close</v-icon>
         </v-btn>
-        <v-toolbar-title>Settings</v-toolbar-title>
+        <v-toolbar-title>
+          <slot name="toolbarTitle"></slot>
+        </v-toolbar-title>
         <v-spacer></v-spacer>
         <v-toolbar-items>
-          <v-btn dark flat @click="dialog = false">Save</v-btn>
+          <slot name="toolbarItems">
+            <!-- <v-btn dark flat @click="dialog = false">Save</v-btn> -->
+          </slot>
         </v-toolbar-items>
       </v-toolbar>
-      <v-list three-line subheader>
-        <v-subheader>User Controls</v-subheader>
-        <v-list-tile avatar>
-          <v-list-tile-content>
-            <v-list-tile-title>Content filtering</v-list-tile-title>
-            <v-list-tile-sub-title>Set the content filtering level to restrict apps that can be downloaded</v-list-tile-sub-title>
-          </v-list-tile-content>
-        </v-list-tile>
-        <v-list-tile avatar>
-          <v-list-tile-content>
-            <v-list-tile-title>Password</v-list-tile-title>
-            <v-list-tile-sub-title>Require password for purchase or use password to restrict purchase</v-list-tile-sub-title>
-          </v-list-tile-content>
-        </v-list-tile>
-      </v-list>
-      <v-divider></v-divider>
-      <v-list three-line subheader>
-        <v-subheader>General</v-subheader>
-        <v-list-tile avatar>
-          <v-list-tile-action>
-            <v-checkbox v-model="notifications"></v-checkbox>
-          </v-list-tile-action>
-          <v-list-tile-content>
-            <v-list-tile-title>Notifications</v-list-tile-title>
-            <v-list-tile-sub-title>Notify me about updates to apps or games that I downloaded</v-list-tile-sub-title>
-          </v-list-tile-content>
-        </v-list-tile>
-        <v-list-tile avatar>
-          <v-list-tile-action>
-            <v-checkbox v-model="sound"></v-checkbox>
-          </v-list-tile-action>
-          <v-list-tile-content>
-            <v-list-tile-title>Sound</v-list-tile-title>
-            <v-list-tile-sub-title>Auto-update apps at any time. Data charges may apply</v-list-tile-sub-title>
-          </v-list-tile-content>
-        </v-list-tile>
-        <v-list-tile avatar>
-          <v-list-tile-action>
-            <v-checkbox v-model="widgets"></v-checkbox>
-          </v-list-tile-action>
-          <v-list-tile-content>
-            <v-list-tile-title>Auto-add widgets</v-list-tile-title>
-            <v-list-tile-sub-title>Automatically add home screen widgets</v-list-tile-sub-title>
-          </v-list-tile-content>
-        </v-list-tile>
-      </v-list>
+      <v-card-text>
+        <slot name="simpleContent"></slot>
+      </v-card-text>
+      <template v-if="data.items.length">
+        <!-- <slot name="listContent"></slot> -->
+        <v-list two-line>
+          <template v-for="(item, index) in items">
+            <v-scroll-y-transition :key="item.index">
+              <v-list-tile avatar ripple>
+                <v-list-tile-content>
+                  <v-list-tile-title>{{ item.title }}</v-list-tile-title>
+                  <v-list-tile-sub-title class="text--primary">{{ item.headline }}</v-list-tile-sub-title>
+                  <v-list-tile-sub-title>{{ item.subtitle }}</v-list-tile-sub-title>
+                </v-list-tile-content>
+
+                <v-list-tile-action>
+                  <v-list-tile-action-text>{{item.action ? actionText[0]:actionText[1]}}</v-list-tile-action-text>
+                  <div>
+                    <v-btn @click.stop="toggle(index,item.id)" icon ripple>
+                      <v-icon v-if="!items[index].action" color="red lighten-1">mdi-minus</v-icon>
+                      <v-icon v-else color="green darken-2">mdi-check</v-icon>
+                    </v-btn>
+                    <v-btn icon ripple @click="deleteItem(index,item.id)">
+                      <v-icon color="grey lighten-1">mdi-delete</v-icon>
+                    </v-btn>
+                  </div>
+                </v-list-tile-action>
+              </v-list-tile>
+            </v-scroll-y-transition>
+            <v-divider v-if="index + 1 < items.length" :key="index"></v-divider>
+          </template>
+        </v-list>
+      </template>
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <slot name="actions"></slot>
+      </v-card-actions>
     </v-card>
   </v-dialog>
 </template>
@@ -73,19 +72,49 @@ export default {
     isFullscreen: {
       type: Boolean,
       default: false
+    },
+    color: {
+      type: String,
+      default: "green"
+    },
+    data: {
+      type: Object,
+      default: function() {
+        return { items: [], actionText: [] };
+      }
     }
   },
   data() {
     return {
       dialog: false,
-      notifications: false,
-      sound: true,
-      widgets: false
+      items: this.data.items,
+      actionText: this.data.actionText
     };
+  },
+  methods: {
+    toggle(index, id) {
+      this.items[index].action = !this.items[index].action;
+      this.$emit("modal-action-toggled", {
+        action: this.items[index].action,
+        id
+      });
+    },
+    deleteItem(index, id) {
+      this.$emit("modal-item-deleted", {
+        action: this.items[index].action,
+        id
+      });
+      this.items.splice(index, 1);
+    }
   },
   watch: {
     dialogOn(newVal, oldVal) {
       this.dialog = !this.dialog;
+    },
+    items(newVal) {
+      if (!newVal.length) {
+        this.dialog = false;
+      }
     }
   }
 };

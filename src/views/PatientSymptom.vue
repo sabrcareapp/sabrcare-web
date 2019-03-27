@@ -40,7 +40,7 @@
       </v-flex>
 
       <v-flex xs12 sm4 class="text-sm-left text-xs-center">
-        <v-btn color="secondary" @click="$refs.calendar.prev()">
+        <v-btn color="#0a2471" @click="$refs.calendar.prev()">
           <v-icon dark left>mdi-chevron-left</v-icon>Prev
         </v-btn>
       </v-flex>
@@ -71,14 +71,14 @@
         </v-dialog>
       </v-flex>
       <v-flex xs12 sm4 class="text-sm-right text-xs-center">
-        <v-btn color="secondary" @click="$refs.calendar.next()">Next
+        <v-btn color="#0a2471" @click="$refs.calendar.next()">Next
           <v-icon right dark>mdi-chevron-right</v-icon>
         </v-btn>
       </v-flex>
 
       <!-- Symptom table -->
       <v-flex md12>
-        <material-card color="green" title="Symptoms of Patient " text>
+        <material-card color="#0a2471" title="Symptoms of Patient " text>
           <v-data-table :headers="headers" :items="items" hide-actions>
             <template slot="headerCell" slot-scope="{ header }">
               <span

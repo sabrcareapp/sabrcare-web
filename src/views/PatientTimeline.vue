@@ -83,14 +83,6 @@ export default {
         desc: "X-ray file added"
       }
     ]
-  }),
-  mounted() {
-    // this.onResize();
-  },
-  methods: {
-    onResize() {
-      // console.log(window.innerWidth);
-    }
-  }
+  })
 };
 </script>

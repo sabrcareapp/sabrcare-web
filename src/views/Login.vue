@@ -1,19 +1,19 @@
 <template>
-  <v-container fluid fill-height>
+  <v-container fill-height fluid grid-list-xl>
     <!-- <v-layout row wrap align-center> -->
-    <v-layout align-center justify-center>
+    <v-layout wrap justify-center>
       <v-flex xs12 sm8 md6 lg6 xl6>
         <v-card class="elevation-12">
           <v-img
-            src="./img/Remedley-Logo.svg"
-            :aspect-ratio="20/9"
+            src="./img/rem-logo.png"
+            :aspect-ratio="25/9"
             contain
-            position="center"
             class="mb-4"
+            :style="{backgroundColor: '#0a2471'}"
           ></v-img>
           <div class="text-xs-center">
             <!-- <v-card-title primary-title> -->
-            <h3 class="mb-0 green--text">Login</h3>
+            <h3 class="mb-0" :style="{color: '#0a2471'}">Login</h3>
             <!-- </v-card-title> -->
           </div>
           <v-form class="text-xs-center" ref="form" v-model="valid">
@@ -23,6 +23,7 @@
               browser-autocomplete
               class="mx-5"
               v-model="email"
+              :key="'email_login'"
               :rules="emailRules"
               label="E-mail"
               required
@@ -31,6 +32,7 @@
             <v-text-field
               class="mx-5"
               v-model="password"
+              :key="'password_login'"
               :append-icon="show1 ? 'mdi-eye-off' : 'mdi-eye'"
               :rules="passwordRules"
               :type="show1 ? 'text' : 'password'"
@@ -48,13 +50,23 @@
               required
             ></v-checkbox>-->
             <!-- <router-link to="/dashboard"> -->
-            <v-btn type="submit" :disabled="!valid" color="success" @click.prevent="login">Login</v-btn>
+            <v-btn
+              :loading="loginLoading"
+              type="submit"
+              :disabled="!valid"
+              color="#0a2471"
+              @click.prevent="login"
+            >Login</v-btn>
             <!-- </router-link> -->
           </v-form>
           <v-card-text class="mx-5 black--text justify-center">
             <h4 class="subheading font-weight-medium">Not a health expert yet ?</h4>
-            <v-btn class="subheading" round small color="success" @click="goToSignUp">Sign up</v-btn>
+            <v-btn class="subheading" round small color="#0a2471" @click="goToSignUp">Sign up</v-btn>
           </v-card-text>
+          <v-snackbar top right v-model="snackbar" :color="snackbarColor" :timeout="5000">
+            {{ snackbarText }}
+            <v-btn dark flat @click="snackbar = false">Close</v-btn>
+          </v-snackbar>
         </v-card>
       </v-flex>
     </v-layout>
@@ -66,6 +78,10 @@ export default {
   data: () => ({
     show1: false,
     valid: false,
+    snackbar: false,
+    snackbarColor: "",
+    snackbarText: "",
+    loginLoading: false,
     email: "",
     emailRules: [
       v => !!v || "E-mail is required",
@@ -81,20 +97,31 @@ export default {
 
   methods: {
     goToSignUp() {
+      // this.$refs.form.reset();
       this.$router.push("/signup");
     },
     login() {
-      // this.$router.replace("/dashboard");
-      this.$router.replace("/patient-list");
+      this.valid = false;
+      this.loginLoading = true;
+      this.$http({
+        method: "post",
+        url: "http://api.remedley.com/api/admin/login",
+        headers: {
+          email: this.email,
+          password: this.password
+        }
+      })
+        .then(res => {
+          this.$router.replace("/patient-list");
+        })
+        .catch(() => {
+          this.snackbarColor = "error";
+          this.snackbarText = "Error.Try again later.";
+          this.snackbar = true;
+          this.loginLoading = false;
+          this.valid = true;
+        });
     }
   }
 };
 </script>
-
-<style scoped>
-/* .login-1 {
-  height: 100%;
-  width: auto;
-  margin-top: auto;
-} */
-</style>

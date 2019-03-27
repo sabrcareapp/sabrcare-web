@@ -19,14 +19,16 @@
     <v-spacer/>
     <v-toolbar-items>
       <v-flex align-center layout py-2>
-        <v-btn color="error" round style="font-size:0.9rem" class="px-1 py-2">Logout</v-btn>
+        <v-btn @click="logout" large color="#f55a4e !important" icon flat>Logout&nbsp;
+          <v-icon left large color="#f55a4e">mdi-logout-variant</v-icon>
+        </v-btn>
         <!-- <v-text-field
           v-if="responsiveInput"
           class="mr-4 mt-2 purple-input"
           label="Search..."
           hide-details
           color="purple"
-        /> -->
+        />-->
         <!-- <router-link
           v-ripple
           class="toolbar-items"
@@ -129,6 +131,9 @@ export default {
         this.responsive = false;
         this.responsiveInput = true;
       }
+    },
+    logout() {
+      this.$router.replace("/login");
     }
   }
 };

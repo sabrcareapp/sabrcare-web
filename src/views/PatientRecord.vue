@@ -2,7 +2,7 @@
   <v-container fill-height fluid grid-list-xl>
     <v-layout justify-center wrap>
       <v-flex xs12 md12>
-        <material-card color="green" title="Records of Patient " text>
+        <material-card color="#0a2471" title="Records of Patient " text>
           <v-data-table :headers="headers" :items="items" hide-actions>
             <template slot="headerCell" slot-scope="{ header }">
               <span

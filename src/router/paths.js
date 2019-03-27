@@ -16,11 +16,6 @@ export default [
     view: 'SignUp'
   },
   {
-    path: '/modal',
-    name: 'Modal',
-    view: 'HealthExpertModal'
-  },
-  {
     path: '/patient-list',
     name: 'Patient List',
     view: 'PatientList'
@@ -54,41 +49,41 @@ export default [
     path: '/dashboard',
     name: 'Admin dashboard',
     view: 'Dashboard'
-  },
-  {
-    path: '/user-profile',
-    name: 'User Profile',
-    view: 'UserProfile'
-  },
-  {
-    path: '/table-list',
-    name: 'Table List',
-    view: 'TableList'
-  },
-  {
-    path: '/typography',
-    view: 'Typography'
-  },
-  {
-    path: '/icons',
-    view: 'Icons'
-  },
-  {
-    path: '/maps',
-    view: 'Maps'
-  },
-  {
-    path: '/notifications',
-    view: 'Notifications'
-  },
-  {
-    path: '/upgrade',
-    name: 'Upgrade to PRO',
-    view: 'Upgrade'
-  },
-  {
-    path: '/temp',
-    name: 'Temp',
-    view: 'Temp'
   }
+  // {
+  //   path: '/user-profile',
+  //   name: 'User Profile',
+  //   view: 'UserProfile'
+  // },
+  // {
+  //   path: '/table-list',
+  //   name: 'Table List',
+  //   view: 'TableList'
+  // },
+  // {
+  //   path: '/typography',
+  //   view: 'Typography'
+  // },
+  // {
+  //   path: '/icons',
+  //   view: 'Icons'
+  // },
+  // {
+  //   path: '/maps',
+  //   view: 'Maps'
+  // },
+  // {
+  //   path: '/notifications',
+  //   view: 'Notifications'
+  // },
+  // {
+  //   path: '/upgrade',
+  //   name: 'Upgrade to PRO',
+  //   view: 'Upgrade'
+  // },
+  // {
+  //   path: '/temp',
+  //   name: 'Temp',
+  //   view: 'Temp'
+  // }
 ]

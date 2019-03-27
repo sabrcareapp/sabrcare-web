@@ -8,9 +8,10 @@
           color="info"
           type="Line"
         >
-          <h4 class="title font-weight-light">Medicines
+          <h4 class="title font-weight-light">
+            Medicines
             <v-btn icon @click="goToPatientStat('Patient Medicines')">
-              <v-icon left color="success">mdi-arrow-expand</v-icon>
+              <v-icon left color="#0a2471">mdi-arrow-expand</v-icon>
             </v-btn>
           </h4>
           <p class="category d-inline-flex font-weight-light">
@@ -33,9 +34,10 @@
           color="red"
           type="Bar"
         >
-          <h4 class="title font-weight-light">Records
+          <h4 class="title font-weight-light">
+            Records
             <v-btn icon @click="goToPatientStat('Patient Records')">
-              <v-icon left color="success">mdi-arrow-expand</v-icon>
+              <v-icon left color="#0a2471">mdi-arrow-expand</v-icon>
             </v-btn>
           </h4>
           <p class="category d-inline-flex font-weight-light">View recent patient records</p>
@@ -53,9 +55,10 @@
           color="green"
           type="Line"
         >
-          <h4 class="title font-weight-light">Symptoms
+          <h4 class="title font-weight-light">
+            Symptoms
             <v-btn icon @click="goToPatientStat('Patient Symptoms')">
-              <v-icon left color="success">mdi-arrow-expand</v-icon>
+              <v-icon left color="#0a2471">mdi-arrow-expand</v-icon>
             </v-btn>
           </h4>
           <p class="category d-inline-flex font-weight-light">Know patients' real-time symptoms</p>
@@ -73,9 +76,10 @@
           color="info"
           type="Line"
         >
-          <h4 class="title font-weight-light">Timeline
+          <h4 class="title font-weight-light">
+            Timeline
             <v-btn icon @click="goToPatientStat('Patient Timeline')">
-              <v-icon left color="success">mdi-arrow-expand</v-icon>
+              <v-icon left color="#0a2471">mdi-arrow-expand</v-icon>
             </v-btn>
           </h4>
           <p class="category d-inline-flex font-weight-light">Observe patterns over time</p>
@@ -260,12 +264,6 @@ export default {
       const id = this.$route.params.id;
       this.$router.push({ name: stat, params: { id } });
     }
-  },
-  mounted() {
-    // const _id = {
-    //   $oid: this.$route.params.id
-    // };
-    // console.log(_id);
   }
 };
 </script>
