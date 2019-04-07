@@ -5,7 +5,7 @@
         <material-card>
           <v-toolbar color="#0a2471" dark>
             <!-- <v-toolbar-side-icon></v-toolbar-side-icon> -->
-            <v-toolbar-title class="text-xs-center hidden-sm-and-down">Patients</v-toolbar-title>
+            <v-toolbar-title class="text-xs-center hidden-xs-only">Patients</v-toolbar-title>
 
             <v-spacer></v-spacer>
             <!-- <v-text-field
@@ -42,13 +42,17 @@
                 class="green--text title"
               >Normal</v-subheader>
               <v-list-tile :key="index" avatar @click="goToPatientStats(patient.id)">
-                <v-list-tile-avatar>
-                  <img :src="patient.avatar">
+                <v-list-tile-avatar color="teal">
+                  <img v-if="patient.avatar" :src="patient.avatar">
+                  <span
+                    v-else
+                    class="white--text headline"
+                  >{{patient.name.slice(0,1).toUpperCase()}}</span>
                 </v-list-tile-avatar>
 
                 <v-list-tile-content>
-                  <v-list-tile-title v-html="patient.name"></v-list-tile-title>
-                  <v-list-tile-sub-title v-html="patient.email"></v-list-tile-sub-title>
+                  <v-list-tile-title v-text="patient.name"></v-list-tile-title>
+                  <v-list-tile-sub-title v-text="patient.email"></v-list-tile-sub-title>
                 </v-list-tile-content>
 
                 <v-list-tile-action>
@@ -62,13 +66,13 @@
           </v-list>
         </material-card>
       </v-flex>
-      <template>
+      <template v-if="isAdmin">
         <v-flex sm6 xs12 md6 lg3>
           <material-stats-card
             color="green"
             icon="mdi-google-play"
             title="App Downloads"
-            value="5"
+            :value="stats.appDownloads"
             sub-icon="mdi-update"
             :sub-text="`Updated ${timeSinceUpdate < 1 ? 'less than a minute':timeSinceUpdate+' mins'} ago`"
           />
@@ -90,11 +94,11 @@
             :dialogOn="dialogs.healthExperts"
             isFullscreen
             color="#0a2471"
-            :data="healthExpertList"
+            :dataInput="healthExpertList"
             @modal-action-toggled="updateStateOfHealthExpertApproval"
             @modal-item-deleted="deleteHealthExpertEntry"
           >
-            <template #toolbarTitle>Health Experts waiting for approval</template>
+            <template #toolbarTitle>Health Experts</template>
             <template #listContent></template>
             <!-- <template #actions>
               <v-btn flat :style="{color: '#0a2471 !important'}" @click="dialog=false">Ok</v-btn>
@@ -151,70 +155,46 @@
 class Patient {
   constructor(id, name, email, avatar, isCritical) {
     this.id = id;
-    this.name = name;
+    this.name = name || "<No name provided>";
     this.email = email || null;
-    this.avatar =
-      avatar ||
-      `https://cdn.vuetifyjs.com/images/lists/${Math.floor(
-        Math.random() * 5 + 1
-      )}.jpg`;
+    this.avatar = avatar || null;
     this.isCritical = isCritical || false;
+  }
+}
+
+/**
+ * The HealthExpert Obj fields are named according to the generic item names of the modal component
+ */
+
+class HealthExpertFormatted {
+  constructor({ _id, name, emailID, emailVerified, licenseNumber }) {
+    this.id = _id.$oid;
+    this.action = emailVerified;
+    this.title = name;
+    this.headline = emailID;
+    this.subtitle = licenseNumber;
   }
 }
 
 export default {
   data() {
     return {
-      isAdmin: true,
+      isAdmin: false,
       snackbar: false,
       snackbarColor: "error",
-      snackbarText: "Error connecting to server...Check internet connection.",
+      snackbarText: "Failed to retrieve data",
       search: "",
       timeSinceUpdate: 0,
       timeSinceUpdateListener: null,
       patientList: [],
       healthExpertList: {
-        items: [
-          {
-            action: false,
-            id: "1",
-            headline: "example@gmail.com",
-            title: "Ali Connors",
-            subtitle: "21345"
-          },
-          {
-            action: false,
-            id: "2",
-            headline: "example2@gmail.com",
-            title: "Adam Levine",
-            subtitle: "32156"
-          },
-          {
-            action: false,
-            id: "3",
-            headline: "example3@gmail.com",
-            title: "Sandra Adams",
-            subtitle: "12246"
-          },
-          {
-            action: false,
-            id: "4",
-            headline: "example4@gmail.com",
-            title: "Trevor Hansen",
-            subtitle: "98675"
-          },
-          {
-            action: false,
-            id: "5",
-            headline: "example5@gmail.com",
-            title: "Britta Holt",
-            subtitle: "10896"
-          }
-        ],
+        items: [],
         actionText: ["Approved", "Pending"]
       },
+      items: [],
       numCritical: 0,
       stats: {
+        appDownloads: "...",
         healthExperts: "...",
         githubIssuesCount: "...",
         patientCount: "..."
@@ -224,7 +204,7 @@ export default {
         issuesRemaining: false,
         patients: false
       },
-      githubRepoLink: "https://github.com/sabrcareapp/sabrcare-web"
+      githubRepoLink: "https://github.com/sabrcareapp/"
     };
   },
   methods: {
@@ -234,11 +214,52 @@ export default {
         params: { id: patientId.$oid }
       });
     },
-    updateStateOfHealthExpertApproval({ action: isApproved, id }) {
-      //TODO: Update request to update health expert status
+    updateStateOfHealthExpertApproval({
+      action: isApproved,
+      id: healthExpert
+    }) {
+      if (isApproved) return;
+      const token = this.$store.getters.authToken;
+      const permissionLevel = this.$store.getters.authLevel;
+      this.$http({
+        method: "post",
+        url: "http://api.remedley.com/api/admin/healthexpert/authorize",
+        headers: {
+          token,
+          permissionLevel,
+          healthExpert
+        }
+      })
+        .then(() => {
+          this.snackbarText = "Health Expert Approved Successfully";
+          this.snackbarColor = "green";
+          this.snackbar = true;
+          this.healthExpertList.items.find(
+            expert => expert.id === healthExpert
+          ).action = true;
+          setTimeout(() => {
+            this.snackbarText = "Failed to retrieve data";
+            this.snackbarColor = "red";
+          }, 7000);
+        })
+        .catch(() => {
+          this.snackbarText =
+            "Failed to approve expert...Try again after reloading the page";
+          this.snackbar = true;
+          setTimeout(() => {
+            this.snackbarText = "Failed to retrieve data";
+          }, 7000);
+        });
     },
     deleteHealthExpertEntry({ action: isApproved, id }) {
       //TODO: Update request to update health expert status/remove him ??
+    },
+    setTimeSinceUpdateListeners() {
+      const timeNow = Date.now();
+      this.timeSinceUpdate = 0;
+      this.timeSinceUpdateListener = setInterval(() => {
+        this.timeSinceUpdate = Math.round((Date.now() - timeNow) / 60000);
+      }, 60000);
     }
   },
   computed: {
@@ -252,23 +273,24 @@ export default {
     }
   },
   mounted() {
-    const timeNow = Date.now();
-    this.timeSinceUpdate = 0;
-    this.timeSinceUpdateListener = setInterval(() => {
-      this.timeSinceUpdate = Math.round((Date.now() - timeNow) / 60000);
-    }, 60000);
+    this.isAdmin = this.$store.getters.authLevel === "2";
+    this.setTimeSinceUpdateListeners();
 
-    /**
-     * this.$http has been globally assigned as axios
-     */
-    this.$http
-      .get("http://api.remedley.com/api/web/patientname/list")
+    const token = this.$store.getters.authToken;
+    const permissionLevel = this.$store.getters.authLevel;
+
+    this.$http({
+      method: "get",
+      url: "http://api.remedley.com/api/admin/patientname/list",
+      headers: {
+        token,
+        permissionLevel
+      }
+    })
       .then(({ data }) => {
         const patientData = [];
-        data.data.map(({ _id, emailID, name, isCritical }) =>
-          patientData.push(
-            new Patient(_id, name, emailID, null, Math.random() < 0.5)
-          )
+        data.data.map(({ _id, name, emailID, avatar, isCritical }) =>
+          patientData.push(new Patient(_id, name, emailID, avatar, isCritical))
         );
         this.numCritical = 0;
         patientData.map(({ isCritical }) => {
@@ -281,13 +303,25 @@ export default {
           return 0;
         });
         this.patientList = patientData;
+        this.stats.patientCount = patientData.length + "";
       })
       .catch(() => {
         if (!this.snackbar) this.snackbar = true;
       });
 
-    this.$http
-      .get("http://api.remedley.com/api/admin/healthexpertcount")
+    if (this.$store.getters.authLevel !== "2") return;
+
+    //Meant only for admins
+
+    //Get total number of health experts
+    this.$http({
+      method: "get",
+      url: "http://api.remedley.com/api/admin/healthexpert/count",
+      headers: {
+        token,
+        permissionLevel
+      }
+    })
       .then(({ data }) => {
         this.stats.healthExperts = `${data.data}`;
       })
@@ -295,10 +329,10 @@ export default {
         if (!this.snackbar) this.snackbar = true;
       });
 
+    //Get total number of code issues
     this.$http
       .get("https://api.github.com/orgs/sabrcareapp/repos")
       .then(({ data }) => {
-        // this.stats
         let count = 0;
         data.map(repo => (count += repo.open_issues));
         this.stats.githubIssuesCount = `${count}`;
@@ -307,10 +341,21 @@ export default {
         if (!this.snackbar) this.snackbar = true;
       });
 
-    this.$http
-      .get("http://api.remedley.com/api/admin/patientcount")
-      .then(({ data }) => {
-        this.stats.patientCount = `${data.data}`;
+    // Get health expert list
+    this.$http({
+      method: "get",
+      url: "http://api.remedley.com/api/admin/healthexpert/list",
+      headers: {
+        token,
+        permissionLevel
+      }
+    })
+      .then(res => {
+        /* NOTE: assigning the result of map to this.healthExpertList.items will NOT work
+        because of change in array reference*/
+        this.healthExpertList.items.push(
+          ...res.data.data.map(expert => new HealthExpertFormatted(expert))
+        );
       })
       .catch(() => {
         if (!this.snackbar) this.snackbar = true;

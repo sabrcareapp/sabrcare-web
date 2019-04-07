@@ -23,7 +23,7 @@
       <v-card-text>
         <slot name="simpleContent"></slot>
       </v-card-text>
-      <template v-if="data.items.length">
+      <template>
         <!-- <slot name="listContent"></slot> -->
         <v-list two-line>
           <template v-for="(item, index) in items">
@@ -77,7 +77,7 @@ export default {
       type: String,
       default: "green"
     },
-    data: {
+    dataInput: {
       type: Object,
       default: function() {
         return { items: [], actionText: [] };
@@ -87,13 +87,12 @@ export default {
   data() {
     return {
       dialog: false,
-      items: this.data.items,
-      actionText: this.data.actionText
+      items: this.dataInput.items,
+      actionText: this.dataInput.actionText
     };
   },
   methods: {
     toggle(index, id) {
-      this.items[index].action = !this.items[index].action;
       this.$emit("modal-action-toggled", {
         action: this.items[index].action,
         id

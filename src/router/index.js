@@ -8,6 +8,7 @@
 
 // Lib imports
 import Vue from 'vue'
+import store from '@/store'
 import VueAnalytics from 'vue-analytics'
 import Router from 'vue-router'
 import Meta from 'vue-meta'
@@ -15,10 +16,11 @@ import Meta from 'vue-meta'
 // Routes
 import paths from './paths'
 
-function route (path, view, name) {
+function route (path, view, name, meta) {
   return {
     name: name || view,
     path,
+    meta,
     component: (resolve) => import(
       `@/views/${view}.vue`
     ).then(resolve)
@@ -30,8 +32,8 @@ Vue.use(Router)
 // Create a new router
 const router = new Router({
   mode: 'history',
-  routes: paths.map(path => route(path.path, path.view, path.name)).concat([
-    { path: '*', redirect: '/login' }
+  routes: paths.map(path => route(path.path, path.view, path.name, path.meta)).concat([
+    { path: '/', redirect: '/login' }, { path: '*', redirect: '/404' }
   ]),
   scrollBehavior (to, from, savedPosition) {
     if (savedPosition) {
@@ -41,6 +43,18 @@ const router = new Router({
       return { selector: to.hash }
     }
     return { x: 0, y: 0 }
+  }
+})
+
+router.beforeEach((to, from, next) => {
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    if (store.getters.isLoggedIn) {
+      next()
+      return
+    }
+    next('/login')
+  } else {
+    next()
   }
 })
 

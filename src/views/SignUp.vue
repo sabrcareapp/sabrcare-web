@@ -147,6 +147,16 @@ export default {
     signUp() {
       this.valid = false;
       this.signUpLoading = true;
+      // let data = {
+      //   name: this.name,
+      //   email: this.email,
+      //   password: this.password,
+      //   is_admin: this.is_admin
+      // };
+      // this.$store
+      //   .dispatch("signup", data)
+      //   .then(() => this.$router.push("/"))
+      //   .catch(err => console.log(err));
       this.$http({
         method: "post",
         url: "http://api.remedley.com/api/admin/signup",

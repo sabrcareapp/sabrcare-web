@@ -17,14 +17,39 @@
             </template>
           </v-data-table>
         </material-card>
+        <v-snackbar top right v-model="snackbar" :color="snackbarColor" :timeout="6000">
+          {{ snackbarText }}
+          <v-btn dark flat @click="snackbar = false">Close</v-btn>
+        </v-snackbar>
       </v-flex>
     </v-layout>
   </v-container>
 </template>
 
 <script>
+class Medicine {
+  constructor({ medicineName, medicineTimeHealthExpert, date }) {
+    const errorMsg = "Not available";
+    this.name = medicineName || errorMsg;
+    this.dateStarted = date ? this.formattedDateAndTime(date.$date) : errorMsg;
+    this.details = medicineTimeHealthExpert || errorMsg;
+  }
+  formattedDateAndTime(date) {
+    return new Intl.DateTimeFormat("en-in", {
+      year: "numeric",
+      day: "2-digit",
+      month: "short",
+      weekday: "short",
+      hour: "2-digit",
+      minute: "2-digit"
+    }).format(new Date(date));
+  }
+}
 export default {
   data: () => ({
+    snackbar: false,
+    snackbarColor: "error",
+    snackbarText: "Failed to retrieve data",
     headers: [
       {
         sortable: false,
@@ -39,41 +64,30 @@ export default {
       {
         sortable: false,
         text: "Prescription Details",
-        value: "prescDetails"
+        value: "details"
       }
     ],
-    items: [
-      {
-        name: "Paracetamol",
-        dateStarted: "01-01-2019",
-        details: "Nulla qui cupidatat voluptate laborum dolore pariatur nostrud non minim aliqua nulla duis."
-      },
-      {
-        name: "Medicine 0",
-        dateStarted: "01-01-2019",
-        details: "Exercitation laboris deserunt cillum labore exercitation mollit."
-      },
-      {
-        name: "Medicine 1",
-        dateStarted: "01-01-2019",
-        details: "In irure ut ut officia sit ullamco."
-      },
-      {
-        name: "Medicine 2",
-        dateStarted: "01-01-2019",
-        details: "Aliquip dolore velit eiusmod aliqua eiusmod dolore mollit nostrud amet non veniam enim esse elit."
-      },
-      {
-        name: "Medicine 3",
-        dateStarted: "01-01-2019",
-        details: "Ad ex aliquip exercitation ut."
-      },
-      {
-        name: "Medicine 4",
-        dateStarted: "01-01-2019",
-        details: "Ullamco minim deserunt magna cupidatat sit."
+    items: []
+  }),
+  mounted() {
+    const token = this.$store.getters.authToken;
+    const permissionLevel = this.$store.getters.authLevel;
+    const patientID = this.$route.params.id;
+    this.$http({
+      method: "get",
+      url: "http://api.remedley.com/api/admin/patient/medicine",
+      headers: {
+        token,
+        permissionLevel,
+        patientID
       }
-    ]
-  })
+    })
+      .then(res => {
+        this.items = res.data.data.map(medicine => new Medicine(medicine));
+      })
+      .catch(() => {
+        this.snackbar = true;
+      });
+  }
 };
 </script>

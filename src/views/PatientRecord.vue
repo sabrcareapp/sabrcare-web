@@ -12,7 +12,7 @@
             </template>
             <template slot="items" slot-scope="{ item }">
               <td>{{ item.name }}</td>
-              <td>{{ item.type }}</td>
+              <td>{{ item.folderName }}</td>
               <td>{{ item.dateUploaded }}</td>
               <td>{{ item.fileType }}</td>
               <td>
@@ -36,7 +36,7 @@
           :fullscreen="dialogData.type === 'pdf'"
         >
           <!-- Handling an image -->
-          <template v-if="dialogData.type== 'img'">
+          <template v-if="dialogData.type === 'img' || dialogData.type === 'Image'">
             <v-layout>
               <v-flex xs12 sm6 offset-sm3>
                 <!-- <v-card> -->
@@ -44,6 +44,7 @@
                   class="white--text"
                   :class="{'text-xs-right':dialogCloseHover}"
                   :src="dialogData.link"
+                  @error.self="imageFailedToLoad"
                 >
                   <v-container fill-height fluid>
                     <v-layout fill-height>
@@ -84,14 +85,47 @@
             </v-container>
           </template>
         </v-dialog>
+        <v-snackbar top right v-model="snackbar" :color="snackbarColor" :timeout="6000">
+          {{ snackbarText }}
+          <v-btn dark flat @click="snackbar = false">Close</v-btn>
+        </v-snackbar>
       </v-flex>
     </v-layout>
   </v-container>
 </template>
 
 <script>
+class Record {
+  constructor({
+    recordsName,
+    recordsFolder,
+    recordsFileType,
+    recordsURL,
+    date
+  }) {
+    const errorMsg = "Not available";
+    this.name = recordsName || errorMsg;
+    this.folderName = recordsFolder || errorMsg;
+    this.dateUploaded = this.formattedDateAndTime(date.$date) || errorMsg;
+    this.fileType = recordsFileType || errorMsg;
+    this.link = recordsURL || errorMsg;
+  }
+  formattedDateAndTime(date) {
+    return new Intl.DateTimeFormat("en-in", {
+      year: "numeric",
+      day: "2-digit",
+      month: "short",
+      weekday: "short",
+      hour: "2-digit",
+      minute: "2-digit"
+    }).format(new Date(date));
+  }
+}
 export default {
   data: () => ({
+    snackbar: false,
+    snackbarColor: "error",
+    snackbarText: "Failed to retrieve data",
     headers: [
       {
         sortable: false,
@@ -100,7 +134,7 @@ export default {
       },
       {
         sortable: false,
-        text: "Type",
+        text: "Folder",
         value: "type"
       },
       {
@@ -119,52 +153,7 @@ export default {
         value: "link"
       }
     ],
-    items: [
-      {
-        name: "Record 1",
-        type: "Surgery",
-        dateUploaded: "01-01-2019",
-        fileType: "img",
-        link:
-          "http://www.jpathinformatics.org/articles/2015/6/1/images/JPatholInform_2015_6_1_62_170649_f2.jpg"
-      },
-      {
-        name: "Record 2",
-        type: "Surgery",
-        dateUploaded: "01-01-2019",
-        fileType: "pdf",
-        link:
-          "https://firebasestorage.googleapis.com/v0/b/dummy-82f4f.appspot.com/o/BraveNewWorld.pdf?alt=media&token=4eeb3773-58fd-4ea0-85ed-db3f719b2a87"
-      },
-      {
-        name: "Record 3",
-        type: "Surgery",
-        dateUploaded: "01-01-2019",
-        fileType: "img",
-        link: "https://cdn.vuetifyjs.com/images/cards/docks.jpg"
-      },
-      {
-        name: "Record 4",
-        type: "Surgery",
-        dateUploaded: "01-01-2019",
-        fileType: "img",
-        link: "https://cdn.vuetifyjs.com/images/cards/docks.jpg"
-      },
-      {
-        name: "Record 5",
-        type: "Surgery",
-        dateUploaded: "01-01-2019",
-        fileType: "img",
-        link: "https://cdn.vuetifyjs.com/images/cards/docks.jpg"
-      },
-      {
-        name: "Record 6",
-        type: "Surgery",
-        dateUploaded: "01-01-2019",
-        fileType: "other",
-        link: "https://cdn.vuetifyjs.com/images/cards/docks.jpg"
-      }
-    ],
+    items: [],
     dialog: false,
     dialogData: {
       type: "img",
@@ -174,18 +163,45 @@ export default {
   }),
   methods: {
     openFile(event, link, type) {
-      if (type === "img" || type === "pdf") {
+      if (type === "img" || type === "Image" || type === "pdf") {
         event.preventDefault();
         this.dialogData.type = type;
         this.dialogData.link = link;
         this.dialog = true;
       }
+    },
+    imageFailedToLoad(event) {
+      this.dialog = false;
+      this.snackbarText = "Broken link";
+      this.snackbar = true;
+      this.snackbarText = "Failed to retrieve data";
     }
   },
   watch: {
     dialog(val) {
       if (!val) this.dialogCloseHover = true;
     }
+  },
+  mounted() {
+    const token = this.$store.getters.authToken;
+    const permissionLevel = this.$store.getters.authLevel;
+    const patientID = this.$route.params.id;
+
+    this.$http({
+      method: "get",
+      url: "http://api.remedley.com/api/admin/patient/records",
+      headers: {
+        token,
+        permissionLevel,
+        patientID
+      }
+    })
+      .then(res => {
+        this.items = res.data.data.map(record => new Record(record));
+      })
+      .catch(() => {
+        this.snackbar = true;
+      });
   }
 };
 </script>

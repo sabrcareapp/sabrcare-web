@@ -18,37 +18,61 @@ export default [
   {
     path: '/patient-list',
     name: 'Patient List',
-    view: 'PatientList'
+    view: 'PatientList',
+    meta: {
+      requiresAuth: true
+    }
   },
   {
     path: '/patient-stats/:id',
     name: 'Patient Stats',
-    view: 'PatientStats'
+    view: 'PatientStats',
+    meta: {
+      requiresAuth: true
+    }
   },
   {
     path: '/patient-medicine/:id',
     name: 'Patient Medicines',
-    view: 'PatientMedicine'
+    view: 'PatientMedicine',
+    meta: {
+      requiresAuth: true
+    }
   },
   {
     path: '/patient-record/:id',
     name: 'Patient Records',
-    view: 'PatientRecord'
+    view: 'PatientRecord',
+    meta: {
+      requiresAuth: true
+    }
   },
   {
     path: '/patient-symptom/:id',
     name: 'Patient Symptoms',
-    view: 'PatientSymptom'
+    view: 'PatientSymptom',
+    meta: {
+      requiresAuth: true
+    }
   },
   {
     path: '/patient-timeline/:id',
     name: 'Patient Timeline',
-    view: 'PatientTimeline'
+    view: 'PatientTimeline',
+    meta: {
+      requiresAuth: true
+    }
   },
   {
     path: '/dashboard',
     name: 'Admin dashboard',
     view: 'Dashboard'
+
+  },
+  {
+    path: '/404',
+    name: 'Page not Found :(',
+    view: 'PageNotFound'
   }
   // {
   //   path: '/user-profile',

@@ -1,8 +1,13 @@
 <template>
-  <v-toolbar id="core-toolbar" prominent style="background: #eee;" v-if="title!==
-    'Login'">
+  <v-toolbar
+    id="core-toolbar"
+    prominent
+    style="background: #0a2471;"
+    v-if="title!==
+    'Login'&&title!=='Sign Up'"
+  >
     <div class="v-toolbar-title">
-      <v-toolbar-title class="tertiary--text font-weight-semi-bold">
+      <v-toolbar-title class="white--text remedley-heading">
         <!-- <v-btn
           v-if="responsive"
           class="default v-btn--simple"
@@ -12,14 +17,22 @@
         >
           <v-icon>mdi-view-list</v-icon>
         </v-btn>-->
-        {{ title }}
+        Remedley
       </v-toolbar-title>
     </div>
 
     <v-spacer/>
     <v-toolbar-items>
       <v-flex align-center layout py-2>
-        <v-btn @click="logout" large color="#f55a4e !important" icon flat>Logout&nbsp;
+        <v-btn
+          v-if="title!=='Login'&&title!=='Sign Up'"
+          @click="logout"
+          large
+          color="#f55a4e !important"
+          icon
+          flat
+        >
+          Logout&nbsp;
           <v-icon left large color="#f55a4e">mdi-logout-variant</v-icon>
         </v-btn>
         <!-- <v-text-field
@@ -89,13 +102,7 @@ import { mapMutations } from "vuex";
 
 export default {
   data: () => ({
-    notifications: [
-      "Mike, John responded to your email",
-      "You have 5 new tasks",
-      "You're now a friend with Andrew",
-      "Another Notification",
-      "Another One"
-    ],
+    notifications: [],
     title: null,
     responsive: false,
     responsiveInput: false
@@ -133,7 +140,9 @@ export default {
       }
     },
     logout() {
-      this.$router.replace("/login");
+      this.$store.dispatch("logout").then(() => {
+        this.$router.push("/login");
+      });
     }
   }
 };
@@ -142,6 +151,11 @@ export default {
 <style scoped>
 #core-toolbar a {
   text-decoration: none;
+}
+
+.remedley-heading {
+  font-family: "Lobster", cursive;
+  font-size: 2em !important;
 }
 </style>
 

@@ -42,14 +42,6 @@
               @click:append="show1 = !show1"
             ></v-text-field>
 
-            <!-- <v-checkbox
-              class="mx-5"
-              v-model="checkbox"
-              :rules="[v => !!v || 'You must agree to continue!']"
-              label="Do you agree? (For future, if required)"
-              required
-            ></v-checkbox>-->
-            <!-- <router-link to="/dashboard"> -->
             <v-btn
               :loading="loginLoading"
               type="submit"
@@ -57,7 +49,6 @@
               color="#0a2471"
               @click.prevent="login"
             >Login</v-btn>
-            <!-- </router-link> -->
           </v-form>
           <v-card-text class="mx-5 black--text justify-center">
             <h4 class="subheading font-weight-medium">Not a health expert yet ?</h4>
@@ -97,23 +88,16 @@ export default {
 
   methods: {
     goToSignUp() {
-      // this.$refs.form.reset();
       this.$router.push("/signup");
     },
     login() {
       this.valid = false;
       this.loginLoading = true;
-      this.$http({
-        method: "post",
-        url: "http://api.remedley.com/api/admin/login",
-        headers: {
-          email: this.email,
-          password: this.password
-        }
-      })
-        .then(res => {
-          this.$router.replace("/patient-list");
-        })
+      const email = this.email;
+      const password = this.password;
+      this.$store
+        .dispatch("login", { email, password })
+        .then(() => this.$router.replace("/patient-list"))
         .catch(() => {
           this.snackbarColor = "error";
           this.snackbarText = "Error.Try again later.";
