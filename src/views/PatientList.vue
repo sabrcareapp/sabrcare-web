@@ -278,6 +278,9 @@ export default {
 
     const token = this.$store.getters.authToken;
     const permissionLevel = this.$store.getters.authLevel;
+    if (!token || !permissionLevel) {
+      this.$router.go();
+    }
 
     this.$http({
       method: "get",
