@@ -19,11 +19,11 @@
               <v-flex>
                 <v-card hover :color="item.color" dark>
                   <v-card-title
-                    class="headline"
+                    class="headline wrap-overflow"
                     :class="{'title':$vuetify.breakpoint.smAndUp,'subheading':$vuetify.breakpoint.xsOnly}"
                   >{{item.title}}</v-card-title>
                   <v-card-text
-                    class="grey lighten-4 text--primary"
+                    class="grey lighten-4 text--primary wrap-overflow"
                     :class="{'title':$vuetify.breakpoint.smAndUp,'subheading':$vuetify.breakpoint.xsOnly}"
                   >{{item.desc}}</v-card-text>
                 </v-card>
@@ -138,3 +138,10 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.wrap-overflow {
+  white-space: normal;
+  word-wrap: break-word !important;
+}
+</style>
