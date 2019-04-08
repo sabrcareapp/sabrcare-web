@@ -33,7 +33,7 @@
           v-model="dialog"
           @keydown.esc="dialog = false"
           transition="dialog-bottom-transition"
-          :fullscreen="dialogData.type === 'pdf'"
+          :fullscreen="dialogData.type.toLowerCase() === 'pdf'"
         >
           <!-- Handling an image -->
           <template v-if="dialogData.type === 'img' || dialogData.type === 'Image'">
@@ -68,7 +68,7 @@
           </template>
 
           <!-- Handling a pdf -->
-          <template v-if="dialogData.type== 'pdf'">
+          <template v-if="dialogData.type.toLowerCase() === 'pdf'">
             <v-container fill-height fluid grid-list-xl>
               <v-layout fill-height justify-center @click="dialog=false">
                 <iframe
@@ -77,10 +77,8 @@
                   width="80%"
                   height="100%"
                   type="application/pdf"
-                  src="https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf#toolbar=0&statusbar=0&navpanes=0"
+                  :src="dialogData.link"
                 ></iframe>
-                <!-- http://docs.google.com/gview?url=http://example.com/mypdf.pdf&embedded=true -->
-                <!-- https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf#toolbar=0&statusbar=0&navpanes=0 -->
               </v-layout>
             </v-container>
           </template>
@@ -163,7 +161,12 @@ export default {
   }),
   methods: {
     openFile(event, link, type) {
-      if (type === "img" || type === "Image" || type === "pdf") {
+      if (
+        type === "img" ||
+        type === "Image" ||
+        type === "pdf" ||
+        type === "PDF"
+      ) {
         event.preventDefault();
         this.dialogData.type = type;
         this.dialogData.link = link;

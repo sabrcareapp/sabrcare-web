@@ -13,7 +13,19 @@
     <v-spacer/>
     <v-toolbar-items>
       <v-flex align-center layout>
-        <v-btn
+        <!-- <span style="cursor: pointer"> -->
+        <span class="title" @click="logout" style="color: #f55a4e;cursor: pointer">Logout</span>
+        <v-icon
+          v-if="title!=='Login'&&title!=='Sign Up'"
+          left
+          large
+          color="#f55a4e"
+          @click="logout"
+          style="cursor: pointer"
+        >mdi-logout-variant</v-icon>
+        <!-- </span> -->
+
+        <!-- <v-btn
           v-if="title!=='Login'&&title!=='Sign Up'"
           @click="logout"
           large
@@ -25,7 +37,7 @@
         >
           Logout&nbsp;
           <v-icon left large color="#f55a4e">mdi-logout-variant</v-icon>
-        </v-btn>
+        </v-btn>-->
       </v-flex>
     </v-toolbar-items>
   </v-toolbar>

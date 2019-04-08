@@ -70,7 +70,7 @@
               class="mx-5"
               v-model="checkbox"
               :rules="[v => !!v || 'You must agree to continue!']"
-              label="Do you agree? (For future, if required)"
+              label="Do you agree to terms and conditions ?"
               required
             ></v-checkbox>
             <!-- <router-link to="/dashboard"> -->
