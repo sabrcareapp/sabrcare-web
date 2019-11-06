@@ -1,18 +1,23 @@
 <template>
   <v-container fill-height fluid grid-list-xl>
     <v-layout wrap>
-      <v-flex md12 sm12 lg3>
+      <v-flex xs12 md6 sm6 lg3>
         <material-chart-card
           :data="dailySalesChart.data"
           :options="dailySalesChart.options"
           color="info"
           type="Line"
         >
-          <h4 class="title font-weight-light">Daily Sales</h4>
+          <h4 class="title font-weight-light">
+            Medicines
+            <v-btn icon @click="goToPatientStat('Patient Medicines')">
+              <v-icon left color="#0a2471">mdi-arrow-expand</v-icon>
+            </v-btn>
+          </h4>
           <p class="category d-inline-flex font-weight-light">
             <v-icon color="green" small>mdi-arrow-up</v-icon>
             <span class="green--text">55%</span>&nbsp;
-            increase in today's sales
+            increase in regularity
           </p>
 
           <template slot="actions">
@@ -21,7 +26,7 @@
           </template>
         </material-chart-card>
       </v-flex>
-      <v-flex md12 sm12 lg3>
+      <v-flex xs12 md6 sm6 lg3>
         <material-chart-card
           :data="emailsSubscriptionChart.data"
           :options="emailsSubscriptionChart.options"
@@ -29,8 +34,13 @@
           color="red"
           type="Bar"
         >
-          <h4 class="title font-weight-light">Email Subscription</h4>
-          <p class="category d-inline-flex font-weight-light">Last Campaign Performance</p>
+          <h4 class="title font-weight-light">
+            Records
+            <v-btn icon @click="goToPatientStat('Patient Records')">
+              <v-icon left color="#0a2471">mdi-arrow-expand</v-icon>
+            </v-btn>
+          </h4>
+          <p class="category d-inline-flex font-weight-light">View recent patient records</p>
 
           <template slot="actions">
             <v-icon class="mr-2" small>mdi-clock-outline</v-icon>
@@ -38,90 +48,47 @@
           </template>
         </material-chart-card>
       </v-flex>
-      <v-flex md12 sm12 lg3>
+      <v-flex xs12 md6 sm6 lg3>
         <material-chart-card
           :data="dataCompletedTasksChart.data"
           :options="dataCompletedTasksChart.options"
           color="green"
           type="Line"
         >
-          <h3 class="title font-weight-light">Completed Tasks</h3>
-          <p class="category d-inline-flex font-weight-light">Last Last Campaign Performance</p>
+          <h4 class="title font-weight-light">
+            Symptoms
+            <v-btn icon @click="goToPatientStat('Patient Symptoms')">
+              <v-icon left color="#0a2471">mdi-arrow-expand</v-icon>
+            </v-btn>
+          </h4>
+          <p class="category d-inline-flex font-weight-light">Know patients' real-time symptoms</p>
 
           <template slot="actions">
             <v-icon class="mr-2" small>mdi-clock-outline</v-icon>
-            <span class="caption grey--text font-weight-light">campaign sent 26 minutes ago</span>
+            <span class="caption grey--text font-weight-light">sent 26 minutes ago</span>
           </template>
         </material-chart-card>
       </v-flex>
-      <v-flex md12 sm12 lg3>
+      <v-flex xs12 md6 sm6 lg3>
         <material-chart-card
           :data="dailySalesChart.data"
           :options="dailySalesChart.options"
           color="info"
           type="Line"
         >
-          <h4 class="title font-weight-light">Daily Sales</h4>
-          <p class="category d-inline-flex font-weight-light">
-            <v-icon color="green" small>mdi-arrow-up</v-icon>
-            <span class="green--text">55%</span>&nbsp;
-            increase in today's sales
-          </p>
+          <h4 class="title font-weight-light">
+            Timeline
+            <v-btn icon @click="goToPatientStat('Patient Timeline')">
+              <v-icon left color="#0a2471">mdi-arrow-expand</v-icon>
+            </v-btn>
+          </h4>
+          <p class="category d-inline-flex font-weight-light">Observe patterns over time</p>
 
           <template slot="actions">
             <v-icon class="mr-2" small>mdi-clock-outline</v-icon>
             <span class="caption grey--text font-weight-light">updated 4 minutes ago</span>
           </template>
         </material-chart-card>
-      </v-flex>
-      <v-flex sm6 xs12 md6 lg3>
-        <material-stats-card
-          color="green"
-          icon="mdi-store"
-          title="Revenue"
-          value="$34,245"
-          sub-icon="mdi-calendar"
-          sub-text="Last 24 Hours"
-        />
-      </v-flex>
-      <v-flex sm6 xs12 md6 lg3>
-        <material-stats-card
-          color="orange"
-          icon="mdi-stethoscope"
-          title="Health Experts"
-          value="50"
-          small-value
-          sub-icon="mdi-update"
-          sub-icon-color
-          sub-text="Just Updated"
-          sub-text-color
-          @click.stop="dialogs.healthExperts = !dialogs.healthExperts"
-        />
-        <material-modal :dialogOn="dialogs.healthExperts" isFullscreen></material-modal>
-      </v-flex>
-      <v-flex sm6 xs12 md6 lg3>
-        <material-stats-card
-          color="red"
-          icon="mdi-information-outline"
-          title="Issues Remaining"
-          value="75"
-          sub-icon="mdi-tag"
-          sub-text="Tracked from Github"
-          @click.stop="dialogs.issuesRemaining = !dialogs.issuesRemaining"
-        />
-        <material-modal :dialogOn="dialogs.issuesRemaining"></material-modal>
-      </v-flex>
-      <v-flex sm6 xs12 md6 lg3>
-        <material-stats-card
-          color="info"
-          icon="mdi-account-multiple"
-          title="Users"
-          value="245"
-          sub-icon="mdi-update"
-          sub-text="Just Updated"
-          @click.stop="dialogs.users = !dialogs.users"
-        />
-        <material-modal :dialogOn="dialogs.users"></material-modal>
       </v-flex>
     </v-layout>
   </v-container>
@@ -292,6 +259,10 @@ export default {
   methods: {
     complete(index) {
       this.list[index] = !this.list[index];
+    },
+    goToPatientStat(stat) {
+      const id = this.$route.params.id;
+      this.$router.push({ name: stat, params: { id } });
     }
   }
 };

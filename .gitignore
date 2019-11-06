@@ -66,4 +66,7 @@ typings/
 #Apple macOS
 .DS_Store
 
+#Production build
+dist/
+
 

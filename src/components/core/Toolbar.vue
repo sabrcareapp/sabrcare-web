@@ -1,154 +1,107 @@
 <template>
   <v-toolbar
     id="core-toolbar"
-
-    flat
     prominent
-    style="background: #eee;"
+    style="background: #0a2471;"
+    v-if="false || title!==
+    'Login'&&title!=='Sign Up'"
   >
     <div class="v-toolbar-title">
-      <v-toolbar-title
-        class="tertiary--text font-weight-light"
-      >
-        <v-btn
-          v-if="responsive"
-          class="default v-btn--simple"
-          dark
-          icon
-          @click.stop="onClickBtn"
-        >
-          <v-icon>mdi-view-list</v-icon>
-        </v-btn>
-        {{ title }}
-      </v-toolbar-title>
+      <v-toolbar-title class="white--text remedley-heading">Remedley</v-toolbar-title>
     </div>
 
-    <v-spacer />
+    <v-spacer/>
     <v-toolbar-items>
-      <v-flex
-        align-center
-        layout
-        py-2
-      >
-        <v-text-field
-          v-if="responsiveInput"
-          class="mr-4 mt-2 purple-input"
-          label="Search..."
-          hide-details
-          color="purple"
-        />
-        <router-link
-          v-ripple
-          class="toolbar-items"
-          to="/"
-        >
-          <v-icon color="tertiary">mdi-view-dashboard</v-icon>
-        </router-link>
-        <v-menu
-          bottom
+      <v-flex align-center layout>
+        <!-- <span style="cursor: pointer"> -->
+        <span class="title" @click="logout" style="color: #f55a4e;cursor: pointer">Logout</span>
+        <v-icon
+          v-if="title!=='Login'&&title!=='Sign Up'"
           left
-          content-class="dropdown-menu"
-          offset-y
-          transition="slide-y-transition">
-          <router-link
-            v-ripple
-            slot="activator"
-            class="toolbar-items"
-            to="/notifications"
-          >
-            <v-badge
-              color="error"
-              overlap
-            >
-              <template slot="badge">
-                {{ notifications.length }}
-              </template>
-              <v-icon color="tertiary">mdi-bell</v-icon>
-            </v-badge>
-          </router-link>
-          <v-card>
-            <v-list dense>
-              <v-list-tile
-                v-for="notification in notifications"
-                :key="notification"
-                @click="onClick"
-              >
-                <v-list-tile-title
-                  v-text="notification"
-                />
-              </v-list-tile>
-            </v-list>
-          </v-card>
-        </v-menu>
-        <router-link
-          v-ripple
-          class="toolbar-items"
-          to="/user-profile"
+          large
+          color="#f55a4e"
+          @click="logout"
+          style="cursor: pointer"
+        >mdi-logout-variant</v-icon>
+        <!-- </span> -->
+
+        <!-- <v-btn
+          v-if="title!=='Login'&&title!=='Sign Up'"
+          @click="logout"
+          large
+          :bottom="isChrome"
+          color="#f55a4e !important"
+          icon
+          flat
+          class="btn-1"
         >
-          <v-icon color="tertiary">mdi-account</v-icon>
-        </router-link>
+          Logout&nbsp;
+          <v-icon left large color="#f55a4e">mdi-logout-variant</v-icon>
+        </v-btn>-->
       </v-flex>
     </v-toolbar-items>
   </v-toolbar>
 </template>
 
 <script>
-
-import {
-  mapMutations
-} from 'vuex'
-
 export default {
   data: () => ({
-    notifications: [
-      'Mike, John responded to your email',
-      'You have 5 new tasks',
-      'You\'re now a friend with Andrew',
-      'Another Notification',
-      'Another One'
-    ],
+    notifications: [],
     title: null,
     responsive: false,
-    responsiveInput: false
+    responsiveInput: false,
+    isChrome: true
   }),
 
   watch: {
-    '$route' (val) {
-      this.title = val.name
+    $route(val) {
+      this.title = val.name;
     }
   },
 
-  mounted () {
-    this.onResponsiveInverted()
-    window.addEventListener('resize', this.onResponsiveInverted)
+  mounted() {
+    this.isChrome =
+      !!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime);
+    this.onResponsiveInverted();
+    window.addEventListener("resize", this.onResponsiveInverted);
   },
-  beforeDestroy () {
-    window.removeEventListener('resize', this.onResponsiveInverted)
+  beforeDestroy() {
+    window.removeEventListener("resize", this.onResponsiveInverted);
   },
 
   methods: {
-    ...mapMutations('app', ['setDrawer', 'toggleDrawer']),
-    onClickBtn () {
-      this.setDrawer(!this.$store.state.app.drawer)
-    },
-    onClick () {
-      //
-    },
-    onResponsiveInverted () {
+    onResponsiveInverted() {
       if (window.innerWidth < 991) {
-        this.responsive = true
-        this.responsiveInput = false
+        this.responsive = true;
+        this.responsiveInput = false;
       } else {
-        this.responsive = false
-        this.responsiveInput = true
+        this.responsive = false;
+        this.responsiveInput = true;
       }
+    },
+    logout() {
+      this.$store.dispatch("logout").then(() => {
+        this.$router.push("/login");
+      });
     }
   }
-}
+};
 </script>
 
-<style>
-  #core-toolbar a {
-    text-decoration: none;
-  }
+<style scoped>
+#core-toolbar a {
+  text-decoration: none;
+}
+
+.remedley-heading {
+  font-family: "Lobster", cursive;
+  font-size: 2em !important;
+}
 </style>
+
+<style lang="scss" scoped>
+@import "../../styles/material-dashboard/mixins";
+@import "../../styles/material-dashboard/variables";
+@import "../../styles/material-dashboard/toolbar";
+</style>
+

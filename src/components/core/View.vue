@@ -5,7 +5,7 @@
         <router-view/>
       </v-fade-transition>
     </div>
-    <core-footer v-if="$route.name !== 'Maps'"/>
+    <!-- <core-footer v-if="$route.name !== 'Maps'"/> -->
   </v-content>
 </template>
 
@@ -13,14 +13,14 @@
 export default {
   metaInfo() {
     return {
-      title: "Sabrcare Web Interface"
+      title: "Remedley Web Interface"
     };
   }
 };
 </script>
 
 <style>
-#core-view {
+/* #core-view {
   padding-bottom: 100px;
-}
+} */
 </style>
